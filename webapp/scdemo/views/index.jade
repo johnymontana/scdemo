@@ -1,9 +1,16 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  
+  
+  div(id="desc")
+    h1= title
+    p Select a category then use the polygon icon below to draw a polygon on the map! Double click when you have selected the last point. Businesses matching the selected category will be displayed within your polygon.
+    select
+      option(value="restaurant", id="category") restaurant
+
   div(id="map")
+
   script.
     L.mapbox.accessToken = 'pk.eyJ1IjoibHlvbndqIiwiYSI6IndwUXlLUjQifQ.DIiytYUASOcXjKdpXW8S-Q';
     var map = L.mapbox.map('map', 'lyonwj.j5m52ga3')
@@ -26,6 +33,7 @@ block content
 
     map.on('draw:created', showPolygonMarkers);
     map.on('draw:edited', showPolygonMarkersEdited);
+    //map.on('draw:deleted', )
 
     function showPolygonMarkersEdited(e) {
       e.layers.eachLayer(function(layer) {
@@ -34,6 +42,7 @@ block content
     }
     function showPolygonMarkers(e) {
       console.log(e);
+      console.log($("#category").val());
       featureGroup.clearLayers();
       featureGroup.addLayer(e.layer);
   
