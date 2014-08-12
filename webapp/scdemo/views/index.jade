@@ -7,7 +7,7 @@ block content
   script.
     L.mapbox.accessToken = 'pk.eyJ1IjoibHlvbndqIiwiYSI6IndwUXlLUjQifQ.DIiytYUASOcXjKdpXW8S-Q';
     var map = L.mapbox.map('map', 'lyonwj.j5m52ga3')
-    .setView([38.91338, -77.03236], 16);
+    .setView([33.47870401153533, -112.0305061340332], 16);
 
     var featureGroup = L.featureGroup().addTo(map);
 
@@ -38,6 +38,62 @@ block content
       featureGroup.addLayer(e.layer);
       e.layer.bindPopup((LGeo.area(e.layer) / 1000000).toFixed(2) + ' km<sup>2</sup>');
       e.layer.openPopup();
+      coords = e.layer['_latlngs']
+      first = coords[0]['lat'] + " " + coords[0]['lng']+", "
+
+      wkt = "POLYGON (("
+      coords.forEach(getCoords)
+      wkt = wkt + first.substring(0, first.length-2) + "))"
+      console.log(wkt)
+
+      url = "http://192.241.222.136:7474/scdemo/scdemo/intersects"
+      data = {polygon: wkt}
+      success = function(data){
+        console.log(data)
+      }
+
+      var dataLayer = L.mapbox.featureLayer().addTo(map);
+
+      function dataToMarkers(data) {
+        // Create a new geojson object that'll represent the table values.
+        data = JSON.parse(data)       
+        var geojson = { type: 'FeatureCollection', features: [] };
+        // For each table row, create a marker.
+        for (var i = 0; i < data.length; i++) {
+        // Blank rows shouldn't be included - they're easy to detect and skip.
+        if (data[i].lon === null || data[i].lat === null) continue;
+        geojson.features.push({
+          type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [ data[i].lon, data[i].lat]
+            },
+          properties: {
+        'marker-size': "large",
+        'marker-color': "#c091e6",
+        'title': data[i].name
+        }
+        });
+      }
+      dataLayer.setGeoJSON(geojson);
+      }
+
+      $.ajax({
+        url: url,
+        data: data,
+        success: dataToMarkers
+        //dataType: dataType
+      });
+
+
+
+
+    }
+
+    function getCoords(e) {
+      group = e['lat'] + " " + e['lng']+", "
+      console.log(group)
+      wkt = wkt + group
     }
 
 
