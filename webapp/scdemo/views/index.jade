@@ -5,9 +5,10 @@ block content
   
   div(id="desc")
     h1= title
-    p Select a category then use the polygon icon below to draw a polygon on the map! Double click when you have selected the last point. Businesses matching the selected category will be displayed within your polygon.
     select
       option(value="restaurant", id="category") restaurant
+    p Select a category then use the polygon icon below to draw a polygon on the map! Double click when you have selected the last point. Businesses matching the selected category will be displayed within your polygon.
+    
 
   div(id="map")
 
@@ -55,7 +56,7 @@ block content
       console.log(wkt)
 
       url = "http://192.241.222.136:7474/scdemo/scdemo/intersects"
-      data = {polygon: wkt}
+      data = {polygon: wkt, category: $("#category").val()}
       success = function(data){
         console.log(data)
       }
