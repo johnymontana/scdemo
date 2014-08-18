@@ -56,6 +56,30 @@ block content
     var current_poly;
     var url = "http://192.241.222.136:7474/scdemo/scdemo/intersects"
 
+    function dataToMarkers(data) {
+        data = JSON.parse(data)       
+        var geojson = { type: 'FeatureCollection', features: [] };
+        
+        for (var i = 0; i < data.length; i++) {
+        
+        if (data[i].lon === null || data[i].lat === null) continue;
+        geojson.features.push({
+          type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [ data[i].lon, data[i].lat]
+            },
+          properties: {
+        'marker-size': "large",
+        'marker-color': "#c091e6",
+        'title': data[i].name
+        }
+        });
+      }
+      dataLayer.setGeoJSON([]);
+      dataLayer.setGeoJSON(geojson);
+      }
+
     $("#category").change(function() {
       if (current_poly){
 
@@ -113,29 +137,7 @@ block content
       }
 
 
-      function dataToMarkers(data) {
-        data = JSON.parse(data)       
-        var geojson = { type: 'FeatureCollection', features: [] };
-        
-        for (var i = 0; i < data.length; i++) {
-        
-        if (data[i].lon === null || data[i].lat === null) continue;
-        geojson.features.push({
-          type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [ data[i].lon, data[i].lat]
-            },
-          properties: {
-        'marker-size': "large",
-        'marker-color': "#c091e6",
-        'title': data[i].name
-        }
-        });
-      }
-      dataLayer.setGeoJSON([]);
-      dataLayer.setGeoJSON(geojson);
-      }
+      
 
       $.ajax({
         url: url,
