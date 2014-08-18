@@ -52,6 +52,7 @@ block content
     .setView([33.47870401153533, -112.0305061340332], 14);
 
     var featureGroup = L.featureGroup().addTo(map);
+    var dataLayer = L.mapbox.featureLayer().addTo(map);
 
     var drawControl = new L.Control.Draw({
       edit: {
@@ -95,7 +96,6 @@ block content
         console.log(data)
       }
 
-      //var dataLayer = L.mapbox.featureLayer().addTo(map);
 
       function dataToMarkers(data) {
         data = JSON.parse(data)       
@@ -117,8 +117,8 @@ block content
         }
         });
       }
-      featureGroup.setGeoJSON([]);
-      featureGroup.setGeoJSON(geojson);
+      dataLayer.setGeoJSON([]);
+      dataLayer.setGeoJSON(geojson);
       }
 
       $.ajax({
