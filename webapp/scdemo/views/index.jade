@@ -53,6 +53,21 @@ block content
 
     var featureGroup = L.featureGroup().addTo(map);
     var dataLayer = L.mapbox.featureLayer().addTo(map);
+    var current_poly;
+    var url = "http://192.241.222.136:7474/scdemo/scdemo/intersects"
+
+    $("#category").change(function() {
+      if (current_poly){
+
+        data = {polygon: current_poly, category: $("#category").val()}
+        $.ajax({
+          url: url,
+          data: data,
+          success: dataToMarkers
+          //dataType: dataType
+        });
+        }
+      });
 
     var drawControl = new L.Control.Draw({
       edit: {
@@ -90,7 +105,8 @@ block content
       wkt = wkt + first.substring(0, first.length-2) + "))"
       console.log(wkt)
 
-      url = "http://192.241.222.136:7474/scdemo/scdemo/intersects"
+      
+      current_poly = wkt
       data = {polygon: wkt, category: $("#category").val()}
       success = function(data){
         console.log(data)
