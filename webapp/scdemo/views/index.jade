@@ -95,7 +95,7 @@ block content
         console.log(data)
       }
 
-      var dataLayer = L.mapbox.featureLayer().addTo(map);
+      //var dataLayer = L.mapbox.featureLayer().addTo(map);
 
       function dataToMarkers(data) {
         data = JSON.parse(data)       
@@ -117,8 +117,8 @@ block content
         }
         });
       }
-      dataLayer.setGeoJSON([]);
-      dataLayer.setGeoJSON(geojson);
+      featureGroup.setGeoJSON([]);
+      featureGroup.setGeoJSON(geojson);
       }
 
       $.ajax({
