@@ -3,7 +3,7 @@
 
 This repo contains the node.js web app and the python scripts for importing data that power [this demo](http://spatialcypherdemo.herokuapp.com)
 
-![scdemo_screenshot.png](screenshot)
+![screenshot](scdemo_screenshot.png)
 
 The purpose of this demo project is to give an example of what could be accomplished using Neo4j Spatial Cypher, a prototype implemented as part of a Google Summer of Code Project.
 
@@ -32,8 +32,9 @@ See [this README]() for more information.
 
 The `webapp/scdemo` directory contains the node.js web application for this project. Install node and npm first. Then:
 
-1. `webapp/scdemo/npm install`
-1. `webapp/scdemo/bin/www` -or- `webapp/scdemo/npm start`
+1. `cd webapp/scdemo`
+1. `npm install`
+1. `./bin/www` -or- `npm start`
 
 The map is powered by MapBox, please use your own API key.
 
