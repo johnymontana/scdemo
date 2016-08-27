@@ -45,19 +45,14 @@ with open('data/yelp_academic_dataset_business.json', 'r') as f:
 		tx.commit()
 		print("Committing transaction")
 
-# print ("Beginning category batch")
-# with open('data/yelp_academic_dataset_business.json', 'r') as f:
-# 	tx = db.begin()
-# 	count = 0
-# 	for b in (json.loads(l) for l in f):
-# 		for c in b['categories']:
-# 			tx.run(merge_category_query, {'business_id': b['business_id'], 'category': c})
-# 			count += 1
-# 			if count >= 10000:
-# 				tx.commit()
-# 				print("Committing transaction")
-# 				tx = db.begin()
-# 				count = 0
-# 	if count > 0:
-# 		tx.commit()
-# 		print("Committing transaction")
+
+## Create spatial layer:
+# CALL spatial.createPointLayer('scdemo');
+
+## Add nodes to spatial layer:
+# MATCH (b:Business)
+# WHERE NOT exists((b)-[:RTREE_METADATA]->())
+# WITH b LIMIT 10000
+# WITH collect(b) AS businesses
+# CALL spatial.addNodes('scdemo', businesses) YIELD node
+# RETURN count(*)
