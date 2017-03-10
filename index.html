@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Spatial Cypher GSoC Demo</title>
+    <title>Spatial Cypher Demo</title>
     <script src="https://api.tiles.mapbox.com/mapbox.js/v2.0.0/mapbox.js"></script>
     <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v2.0.0/mapbox.css">
     <link rel="stylesheet" href="webapp/scdemo/public/stylesheets/style.css">
@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="desc">
-    <h1>Spatial Cypher GSoC Demo</h1>
+    <h1>Spatial Cypher Demo</h1>
     <select id="category">
         <option value="Restaurants">Restaurants</option>
         <option value="Shopping">Shopping</option>
@@ -60,16 +60,16 @@
 var map = L.mapbox.map('map', 'lyonwj.j5m52ga3')
     .setView([33.47870401153533, -112.0305061340332], 14);
 
-var featureGroup = L.featureGroup().addTo(map);
-var dataLayer = L.mapbox.featureLayer().addTo(map);
-var current_poly;
-var url = "http://192.241.222.136:7474/scdemo/scdemo/intersects";
+var featureGroup = L.featureGroup().addTo(map),
+    dataLayer = L.mapbox.featureLayer().addTo(map),
+    current_poly;
+
 
 var driver = neo4j.v1.driver("bolt://159.203.114.38/", neo4j.v1.auth.basic("neo4j", "letmein"));
 
 
 function dataToMarkers(data) {
-    //data = JSON.parse(data)
+
     var geojson = { type: 'FeatureCollection', features: [] };
 
     for (var i = 0; i < data.length; i++) {
@@ -94,18 +94,7 @@ function dataToMarkers(data) {
 
 $("#category").change(function() {
     if (current_poly){
-
-//        data = {polygon: current_poly, category: $("#category").val()}
-//        $.ajax({
-//            url: url,
-//            data: data,
-//            success: dataToMarkers
-//            //dataType: dataType
-//        });
-
         queryBusinesses(current_poly, $("#category").val());
-
-        // TODO: make query, send data to dataToMarkers
     }
 });
 
@@ -124,7 +113,6 @@ var drawControl = new L.Control.Draw({
 
 map.on('draw:created', showPolygonMarkers);
 map.on('draw:edited', showPolygonMarkersEdited);
-//map.on('draw:deleted', )
 
 function showPolygonMarkersEdited(e) {
     e.layers.eachLayer(function(layer) {
@@ -137,44 +125,23 @@ function showPolygonMarkers(e) {
     featureGroup.clearLayers();
     featureGroup.addLayer(e.layer);
 
-    coords = e.layer['_latlngs']
-    first = coords[0]['lng'] + " " + coords[0]['lat']+", "
-    //first = coords[0]['lng'] + ""
-    wkt = "POLYGON (("
-    coords.forEach(getCoords)
-    wkt = wkt + first.substring(0, first.length-2) + "))"
-    console.log(wkt)
+    coords = e.layer['_latlngs'];
+    first = coords[0]['lng'] + " " + coords[0]['lat']+", ";
+
+    wkt = "POLYGON ((";
+    coords.forEach(getCoords);
+    wkt = wkt + first.substring(0, first.length-2) + "))";
+    console.log(wkt);
 
 
-    current_poly = wkt
-    data = {polygon: wkt, category: $("#category").val()}
-    success = function(data){
-        console.log(data)
-    }
+    current_poly = wkt;
+    data = {polygon: wkt, category: $("#category").val()};
 
-
-
-
-//    $.ajax({
-//        url: url,
-//        data: data,
-//        success: dataToMarkers
-//        //dataType: dataType
-//    });
 
     var category = $("#category").val();
 
 
     queryBusinesses(wkt, category);
-
-    // Query database, call dataToMarkers with data from query
-
-
-
-
-
-
-
 }
 
 function getCoords(e) {
@@ -195,7 +162,6 @@ function queryBusinesses(wkt, category) {
                 r.push({lat: record.get("lat"), lon: record.get("lon"), name: record.get("name")});
                 console.log(r);
             });
-            // Completed!
             session.close();
             console.log(r);
             dataToMarkers(r);
@@ -205,8 +171,8 @@ function queryBusinesses(wkt, category) {
         .catch(function(error) {
             console.log(error);
         });
-
 }
 
-
-</script></body></html>
+</script>
+</body>
+</html>
